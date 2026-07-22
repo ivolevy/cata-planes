@@ -188,12 +188,18 @@ function Index() {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      const dbPlans = (data || []).map((item) => ({
-        ...item,
-        description: item.description || "",
-      })) as Plan[];
+      const dbPlans = (data || []).map((item) => {
+        let cat = item.category as CategoryKey;
+        if ((cat as string) === "actividad" || (cat as string) === "paseo") {
+          cat = "actividad_paseo";
+        }
+        return {
+          ...item,
+          category: cat,
+          description: item.description || "",
+        };
+      }) as Plan[];
 
-      // Combinar los datos de la base de datos con SAMPLE (para asegurar que Bodegón, Restaurant yankee, etc. aparezcan si no están aún en la BDD)
       const existingNames = new Set(dbPlans.map((p) => p.name.toLowerCase().trim()));
       const missingFromSample = SAMPLE.filter(
         (s) => !existingNames.has(s.name.toLowerCase().trim())
@@ -210,7 +216,12 @@ function Index() {
 
   const filteredPlans = useMemo(() => {
     if (filter === "todos") return plans;
-    return plans.filter((p) => p.category === filter);
+    return plans.filter((p) => {
+      if (filter === "actividad_paseo") {
+        return p.category === "actividad_paseo" || (p.category as string) === "actividad" || (p.category as string) === "paseo";
+      }
+      return p.category === filter;
+    });
   }, [plans, filter]);
 
   const [page, setPage] = useState(1);
