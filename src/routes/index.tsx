@@ -133,6 +133,12 @@ const SAMPLE: Plan[] = [
     name: "Restaurant yankee",
     description: "",
   },
+  {
+    id: "11",
+    category: "actividad_paseo",
+    name: "Ir a san telmo",
+    description: "",
+  },
 ];
 
 
