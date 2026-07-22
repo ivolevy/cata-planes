@@ -301,7 +301,7 @@ function Index() {
         <header className="mb-6 text-center sm:mb-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/80 backdrop-blur px-3.5 py-1 text-xs text-muted-foreground shadow-sm">
             <Heart className="h-3.5 w-3.5 fill-[var(--blush)] text-[var(--blush)]" strokeWidth={1.5} />
-            <span className="font-medium tracking-wide">el diario de ivan y la gordita</span>
+            <span className="font-medium tracking-wide">el diario de ivan y Cata</span>
           </div>
         </header>
 
@@ -590,8 +590,8 @@ function CategoryFilter({
         type="button"
         onClick={() => onChange("todos")}
         className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${filter === "todos"
-            ? "bg-foreground text-background"
-            : "border border-border/60 bg-card text-muted-foreground hover:bg-muted"
+          ? "bg-foreground text-background"
+          : "border border-border/60 bg-card text-muted-foreground hover:bg-muted"
           }`}
       >
         Todos
@@ -605,8 +605,8 @@ function CategoryFilter({
             type="button"
             onClick={() => onChange(c.key)}
             className={`shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${active
-                ? "bg-foreground text-background"
-                : "border border-border/60 bg-card text-muted-foreground hover:bg-muted"
+              ? "bg-foreground text-background"
+              : "border border-border/60 bg-card text-muted-foreground hover:bg-muted"
               }`}
           >
             <Icon className="h-3 w-3" strokeWidth={1.75} />

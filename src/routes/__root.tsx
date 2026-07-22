@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" },
-      { title: "los planes de ivan y la gordita" },
+      { title: "Los planes de Ivan y Cata" },
       {
         name: "description",
         content: "el diario de ivan y cata",
@@ -85,8 +85,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#FAF8F5" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "default" },
-      { name: "apple-mobile-web-app-title", content: "los planes de ivan y la gordita" },
-      { property: "og:title", content: "los planes de ivan y la gordita" },
+      { name: "apple-mobile-web-app-title", content: "Los planes de Ivan y Cata" },
+      { property: "og:title", content: "Los planes de Ivan y Cata" },
       {
         property: "og:description",
         content: "el diario de ivan y cata",
@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "los planes de ivan y la gordita" },
+      { name: "twitter:title", content: "Los planes de Ivan y Cata" },
       { name: "twitter:description", content: "el diario de ivan y cata" },
       { name: "twitter:image", content: "/og-image.png" },
     ],
