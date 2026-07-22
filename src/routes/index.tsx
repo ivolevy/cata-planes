@@ -142,9 +142,11 @@ function Index() {
         { event: "*", schema: "public", table: "plans" },
         (payload) => {
           if (payload.eventType === "INSERT") {
-            setPlans((prev) => [payload.new as Plan, ...prev.filter((p) => p.id !== payload.new.id)]);
+            const plan = { ...(payload.new as Plan), description: payload.new.description || "" };
+            setPlans((prev) => [plan, ...prev.filter((p) => p.id !== plan.id)]);
           } else if (payload.eventType === "UPDATE") {
-            setPlans((prev) => prev.map((p) => (p.id === payload.new.id ? (payload.new as Plan) : p)));
+            const plan = { ...(payload.new as Plan), description: payload.new.description || "" };
+            setPlans((prev) => prev.map((p) => (p.id === plan.id ? plan : p)));
           } else if (payload.eventType === "DELETE") {
             setPlans((prev) => prev.filter((p) => p.id !== payload.old.id));
           }
@@ -166,7 +168,11 @@ function Index() {
 
       if (error) throw error;
       if (data && data.length > 0) {
-        setPlans(data as Plan[]);
+        const cleaned = data.map((item) => ({
+          ...item,
+          description: item.description || "",
+        }));
+        setPlans(cleaned as Plan[]);
       } else {
         setPlans(SAMPLE);
       }
