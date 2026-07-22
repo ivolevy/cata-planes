@@ -118,6 +118,18 @@ const SAMPLE: Plan[] = [
     name: "Güerrin",
     description: "",
   },
+  {
+    id: "9",
+    category: "comida",
+    name: "Bodegón",
+    description: "",
+  },
+  {
+    id: "10",
+    category: "comida",
+    name: "Restaurant yankee",
+    description: "",
+  },
 ];
 
 
