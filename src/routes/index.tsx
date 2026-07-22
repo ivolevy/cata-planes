@@ -45,32 +45,13 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type CategoryKey =
-  | "comer"
-  | "cafe"
-  | "cine"
-  | "viaje"
-  | "paseo"
-  | "casa"
-  | "juegos"
-  | "musica"
-  | "helado"
-  | "fotos"
-  | "sorpresa"
-  | "otro";
+type CategoryKey = "comida" | "casa" | "actividad" | "paseo" | "otro";
 
 const CATEGORIES: { key: CategoryKey; label: string; icon: LucideIcon }[] = [
-  { key: "comer", label: "Comer", icon: UtensilsCrossed },
-  { key: "cafe", label: "Café", icon: Coffee },
-  { key: "cine", label: "Cine", icon: Film },
-  { key: "viaje", label: "Viaje", icon: Plane },
+  { key: "comida", label: "Comida", icon: UtensilsCrossed },
+  { key: "casa", label: "En Casa", icon: Home },
+  { key: "actividad", label: "Actividad", icon: Activity },
   { key: "paseo", label: "Paseo", icon: Footprints },
-  { key: "casa", label: "Plan en casa", icon: Home },
-  { key: "juegos", label: "Juegos", icon: Gamepad2 },
-  { key: "musica", label: "Música", icon: Music },
-  { key: "helado", label: "Helado", icon: IceCream },
-  { key: "fotos", label: "Fotos", icon: Camera },
-  { key: "sorpresa", label: "Sorpresa", icon: Sparkles },
   { key: "otro", label: "Otro", icon: HelpCircle },
 ];
 
@@ -95,13 +76,13 @@ const SAMPLE: Plan[] = [
   },
   {
     id: "2",
-    category: "cafe",
+    category: "comida",
     name: "Palacio Duhau",
     description: "Ir a merendar",
   },
   {
     id: "3",
-    category: "comer",
+    category: "comida",
     name: "Frutas de torta",
     description: "",
   },
@@ -113,7 +94,7 @@ const SAMPLE: Plan[] = [
   },
   {
     id: "5",
-    category: "cafe",
+    category: "comida",
     name: "Café Tortoni",
     description: "Churros con chocolate",
   },
@@ -125,13 +106,13 @@ const SAMPLE: Plan[] = [
   },
   {
     id: "7",
-    category: "comer",
+    category: "comida",
     name: "Famoso Paulin",
     description: "El lugar donde tiran los platos por la barra",
   },
   {
     id: "8",
-    category: "comer",
+    category: "comida",
     name: "Güerrin",
     description: "",
   },
@@ -141,7 +122,7 @@ const SAMPLE: Plan[] = [
 function Index() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState<CategoryKey>("paseo");
+  const [category, setCategory] = useState<CategoryKey>("comida");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [removingId, setRemovingId] = useState<string | null>(null);
@@ -231,7 +212,7 @@ function Index() {
 
     setName("");
     setDescription("");
-    setCategory("paseo");
+    setCategory("comida");
   }
 
   async function handleDelete(id: string) {
