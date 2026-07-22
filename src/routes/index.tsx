@@ -100,9 +100,9 @@ const SAMPLE: Plan[] = [
   },
   {
     id: "6",
-    category: "paseo",
+    category: "comida",
     name: "Palacio Barolo",
-    description: "",
+    description: "Churros con chocolate",
   },
   {
     id: "7",
