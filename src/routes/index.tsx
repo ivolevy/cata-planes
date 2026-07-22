@@ -345,7 +345,7 @@ function Index() {
                     htmlFor="description"
                     className="text-xs font-medium text-muted-foreground"
                   >
-                    Breve descripción
+                    Descripción <span className="text-muted-foreground/60 font-normal">(opcional)</span>
                   </Label>
                   <Textarea
                     id="description"
@@ -460,9 +460,8 @@ function PlanCard({
 
   return (
     <article
-      className={`group rounded-2xl border border-border/60 bg-card p-3.5 sm:p-4 shadow-soft transition-all duration-300 hover:shadow-lift ${
-        removing ? "animate-plan-out" : "animate-plan-in"
-      }`}
+      className={`group rounded-2xl border border-border/60 bg-card p-3.5 sm:p-4 shadow-soft transition-all duration-300 hover:shadow-lift ${removing ? "animate-plan-out" : "animate-plan-in"
+        }`}
     >
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--blush-soft)] text-foreground/80">
@@ -492,9 +491,8 @@ function PlanCard({
               className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  isOpen ? "rotate-180" : ""
-                }`}
+                className={`h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""
+                  }`}
                 strokeWidth={2}
               />
             </button>
@@ -570,11 +568,10 @@ function CategoryFilter({
       <button
         type="button"
         onClick={() => onChange("todos")}
-        className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-          filter === "todos"
+        className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${filter === "todos"
             ? "bg-foreground text-background"
             : "border border-border/60 bg-card text-muted-foreground hover:bg-muted"
-        }`}
+          }`}
       >
         Todos
       </button>
@@ -586,11 +583,10 @@ function CategoryFilter({
             key={c.key}
             type="button"
             onClick={() => onChange(c.key)}
-            className={`shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-              active
+            className={`shrink-0 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${active
                 ? "bg-foreground text-background"
                 : "border border-border/60 bg-card text-muted-foreground hover:bg-muted"
-            }`}
+              }`}
           >
             <Icon className="h-3 w-3" strokeWidth={1.75} />
             {c.label}
@@ -664,7 +660,9 @@ function EditDialog({
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-xs font-medium text-muted-foreground">Descripción</Label>
+            <Label className="text-xs font-medium text-muted-foreground">
+              Descripción <span className="text-muted-foreground/60 font-normal">(opcional)</span>
+            </Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
