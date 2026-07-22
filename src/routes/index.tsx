@@ -19,6 +19,8 @@ import {
   Heart,
   Plus,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Activity,
   type LucideIcon,
 } from "lucide-react";
@@ -176,10 +178,31 @@ function Index() {
     }
   }
 
-  const filteredPlans = useMemo(() => {
-    if (filter === "todos") return plans;
-    return plans.filter((p) => p.category === filter);
-  }, [plans, filter]);
+  const [page, setPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 640);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const pageSize = isMobile ? 3 : 4;
+  const totalPages = Math.max(1, Math.ceil(filteredPlans.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+
+  const paginatedPlans = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredPlans.slice(start, start + pageSize);
+  }, [filteredPlans, currentPage, pageSize]);
+
+  function handleFilterChange(f: CategoryKey | "todos") {
+    setFilter(f);
+    setPage(1);
+  }
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -341,21 +364,55 @@ function Index() {
           </aside>
 
           {/* Right: list */}
-          <section className="min-w-0">
-            <CategoryFilter filter={filter} onChange={setFilter} />
-            {filteredPlans.length === 0 ? (
-              <EmptyState />
-            ) : (
-              <div className="space-y-3">
-                {filteredPlans.map((plan) => (
-                  <PlanCard
-                    key={plan.id}
-                    plan={plan}
-                    removing={removingId === plan.id}
-                    onEdit={() => setEditing(plan)}
-                    onDelete={() => handleDelete(plan.id)}
-                  />
-                ))}
+          <section className="min-w-0 flex flex-col justify-between">
+            <div>
+              <CategoryFilter filter={filter} onChange={handleFilterChange} />
+              {filteredPlans.length === 0 ? (
+                <EmptyState />
+              ) : (
+                <div className="space-y-3">
+                  {paginatedPlans.map((plan) => (
+                    <PlanCard
+                      key={plan.id}
+                      plan={plan}
+                      removing={removingId === plan.id}
+                      onEdit={() => setEditing(plan)}
+                      onDelete={() => handleDelete(plan.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {filteredPlans.length > pageSize && (
+              <div className="mt-5 flex items-center justify-between border-t border-border/40 pt-4 text-xs text-muted-foreground">
+                <span>
+                  Página {currentPage} de {totalPages} ({filteredPlans.length} planes)
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage <= 1}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    className="h-8 rounded-lg border-border/60 px-2.5"
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-0.5" />
+                    Anterior
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    className="h-8 rounded-lg border-border/60 px-2.5"
+                  >
+                    Siguiente
+                    <ChevronRight className="h-4 w-4 ml-0.5" />
+                  </Button>
+                </div>
               </div>
             )}
           </section>
