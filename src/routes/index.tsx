@@ -90,20 +90,50 @@ const SAMPLE: Plan[] = [
   {
     id: "1",
     category: "paseo",
-    name: "Ver el atardecer en el río",
-    description: "Llevar unos mates y mirar cómo se pone el sol, sin apuro.",
+    name: "Picnic",
+    description: "",
   },
   {
     id: "2",
-    category: "comer",
-    name: "Cenar pasta casera",
-    description: "Probar esa receta nueva y abrir una botella de vino tinto.",
+    category: "cafe",
+    name: "Palacio Duhau",
+    description: "Ir a merendar",
   },
   {
     id: "3",
-    category: "viaje",
-    name: "Escapada de fin de semana",
-    description: "Dos noches en la montaña, sin señal y con muchos libros.",
+    category: "comer",
+    name: "Frutas de torta",
+    description: "",
+  },
+  {
+    id: "4",
+    category: "casa",
+    name: "Cocinar",
+    description: "",
+  },
+  {
+    id: "5",
+    category: "cafe",
+    name: "Café Tortoni",
+    description: "Churros con chocolate",
+  },
+  {
+    id: "6",
+    category: "paseo",
+    name: "Palacio Barolo",
+    description: "",
+  },
+  {
+    id: "7",
+    category: "comer",
+    name: "Famoso Paulin",
+    description: "El lugar donde tiran los platos por la barra",
+  },
+  {
+    id: "8",
+    category: "comer",
+    name: "Güerrin",
+    description: "",
   },
 ];
 
