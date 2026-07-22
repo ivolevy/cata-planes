@@ -179,15 +179,18 @@ function Index() {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      if (data && data.length > 0) {
-        const cleaned = data.map((item) => ({
-          ...item,
-          description: item.description || "",
-        }));
-        setPlans(cleaned as Plan[]);
-      } else {
-        setPlans(SAMPLE);
-      }
+      const dbPlans = (data || []).map((item) => ({
+        ...item,
+        description: item.description || "",
+      })) as Plan[];
+
+      // Combinar los datos de la base de datos con SAMPLE (para asegurar que Bodegón, Restaurant yankee, etc. aparezcan si no están aún en la BDD)
+      const existingNames = new Set(dbPlans.map((p) => p.name.toLowerCase().trim()));
+      const missingFromSample = SAMPLE.filter(
+        (s) => !existingNames.has(s.name.toLowerCase().trim())
+      );
+
+      setPlans([...dbPlans, ...missingFromSample]);
     } catch (err) {
       console.error("Error fetching plans:", err);
       setPlans(SAMPLE);
