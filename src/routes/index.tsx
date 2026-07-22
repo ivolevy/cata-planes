@@ -47,20 +47,23 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type CategoryKey = "comida" | "casa" | "actividad" | "paseo" | "otro";
+type CategoryKey = "comida" | "casa" | "actividad_paseo" | "otro";
 
 const CATEGORIES: { key: CategoryKey; label: string; icon: LucideIcon }[] = [
   { key: "comida", label: "Comida", icon: UtensilsCrossed },
   { key: "casa", label: "En Casa", icon: Home },
-  { key: "actividad", label: "Actividad", icon: Activity },
-  { key: "paseo", label: "Paseo", icon: Footprints },
+  { key: "actividad_paseo", label: "Actividad / Paseo", icon: Footprints },
   { key: "otro", label: "Otro", icon: HelpCircle },
 ];
 
-const catMap = Object.fromEntries(CATEGORIES.map((c) => [c.key, c])) as Record<
-  CategoryKey,
-  (typeof CATEGORIES)[number]
->;
+const catMap: Record<string, (typeof CATEGORIES)[number]> = {
+  comida: { key: "comida", label: "Comida", icon: UtensilsCrossed },
+  casa: { key: "casa", label: "En Casa", icon: Home },
+  actividad_paseo: { key: "actividad_paseo", label: "Actividad / Paseo", icon: Footprints },
+  actividad: { key: "actividad_paseo", label: "Actividad / Paseo", icon: Footprints },
+  paseo: { key: "actividad_paseo", label: "Actividad / Paseo", icon: Footprints },
+  otro: { key: "otro", label: "Otro", icon: HelpCircle },
+};
 
 type Plan = {
   id: string;
@@ -72,7 +75,7 @@ type Plan = {
 const SAMPLE: Plan[] = [
   {
     id: "1",
-    category: "paseo",
+    category: "actividad_paseo",
     name: "Picnic",
     description: "",
   },
@@ -476,7 +479,7 @@ function PlanCard({
   onDelete: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const cat = catMap[plan.category];
+  const cat = catMap[plan.category] || { label: "Actividad / Paseo", icon: Footprints };
   const Icon = cat.icon;
 
   return (
