@@ -120,6 +120,28 @@ function Index() {
 
   useEffect(() => {
     fetchPlans();
+
+    // Suscripción Realtime para actualizar al instante en mobile / desktop
+    const channel = supabase
+      .channel("plans-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "plans" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            setPlans((prev) => [payload.new as Plan, ...prev.filter((p) => p.id !== payload.new.id)]);
+          } else if (payload.eventType === "UPDATE") {
+            setPlans((prev) => prev.map((p) => (p.id === payload.new.id ? (payload.new as Plan) : p)));
+          } else if (payload.eventType === "DELETE") {
+            setPlans((prev) => prev.filter((p) => p.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   async function fetchPlans() {
@@ -166,11 +188,10 @@ function Index() {
 
       if (error) throw error;
       if (data) {
-        setPlans((p) => [data as Plan, ...p]);
+        setPlans((p) => [data as Plan, ...p.filter((x) => x.id !== data.id)]);
       }
     } catch (err) {
       console.error("Error adding plan to Supabase:", err);
-      // Fallback local state if Supabase fails
       const fallback: Plan = {
         id: crypto.randomUUID(),
         ...newPlan,
@@ -214,40 +235,40 @@ function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-6xl px-6 pb-24 pt-10 sm:px-10 sm:pt-14">
+    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-rose-100 selection:text-rose-900">
+      <div className="mx-auto max-w-5xl px-4 pb-20 pt-6 sm:px-8 sm:pt-12">
         {/* Header */}
-        <header className="mb-10 text-center sm:mb-12">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card px-3 py-1 text-xs text-muted-foreground shadow-soft">
-            <Heart className="h-3 w-3 fill-[var(--blush)] text-[var(--blush)]" strokeWidth={1.5} />
-            <span>el diario de ivan y la gordita</span>
+        <header className="mb-6 text-center sm:mb-10">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/80 backdrop-blur px-3.5 py-1 text-xs text-muted-foreground shadow-sm">
+            <Heart className="h-3.5 w-3.5 fill-[var(--blush)] text-[var(--blush)]" strokeWidth={1.5} />
+            <span className="font-medium tracking-wide">el diario de ivan y la gordita</span>
           </div>
         </header>
 
         {/* Content */}
-        <div className="grid gap-8 lg:grid-cols-[35fr_65fr] lg:gap-10">
+        <div className="grid gap-6 lg:grid-cols-[38fr_62fr] lg:gap-8">
           {/* Left: form */}
-          <aside className="lg:sticky lg:top-10 lg:self-start">
+          <aside className="lg:sticky lg:top-8 lg:self-start">
             <form
               onSubmit={handleAdd}
-              className="rounded-3xl border border-border/60 bg-card p-7 shadow-soft"
+              className="rounded-2xl sm:rounded-3xl border border-border/60 bg-card p-4 sm:p-6 shadow-soft"
             >
-              <div className="mb-6">
-                <h2 className="font-display text-xl text-foreground">Nuevo plan</h2>
-                <p className="mt-1 text-sm text-muted-foreground">
+              <div className="mb-4 sm:mb-5">
+                <h2 className="font-display text-lg sm:text-xl text-foreground">Nuevo plan</h2>
+                <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">
                   Algo lindo para hacer juntos.
                 </p>
               </div>
 
-              <div className="space-y-5">
-                <div className="space-y-2">
+              <div className="space-y-4">
+                <div className="space-y-1.5">
                   <Label htmlFor="category" className="text-xs font-medium text-muted-foreground">
                     Tipo de actividad
                   </Label>
                   <Select value={category} onValueChange={(v) => setCategory(v as CategoryKey)}>
                     <SelectTrigger
                       id="category"
-                      className="h-11 rounded-xl border-border/70 bg-background"
+                      className="h-10 sm:h-11 rounded-xl border-border/70 bg-background text-sm"
                     >
                       <SelectValue />
                     </SelectTrigger>
@@ -267,7 +288,7 @@ function Index() {
                   </Select>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="name" className="text-xs font-medium text-muted-foreground">
                     Nombre
                   </Label>
@@ -276,11 +297,11 @@ function Index() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ver el atardecer"
-                    className="h-11 rounded-xl border-border/70 bg-background"
+                    className="h-10 sm:h-11 rounded-xl border-border/70 bg-background text-sm"
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label
                     htmlFor="description"
                     className="text-xs font-medium text-muted-foreground"
@@ -292,14 +313,14 @@ function Index() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Llevar unos mates y mirar el río."
-                    rows={3}
-                    className="resize-none rounded-xl border-border/70 bg-background"
+                    rows={2}
+                    className="resize-none rounded-xl border-border/70 bg-background text-sm"
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  className="group h-11 w-full rounded-xl bg-foreground text-background shadow-soft transition-all duration-300 hover:bg-foreground/90 hover:shadow-lift active:scale-[0.98]"
+                  className="group h-10 sm:h-11 w-full rounded-xl bg-foreground text-background shadow-soft transition-all duration-300 hover:bg-foreground/90 hover:shadow-lift active:scale-[0.98] text-sm font-medium"
                 >
                   <Plus className="mr-1.5 h-4 w-4 transition-transform duration-300 group-hover:rotate-90" strokeWidth={2} />
                   Agregar plan
@@ -309,12 +330,12 @@ function Index() {
           </aside>
 
           {/* Right: list */}
-          <section>
+          <section className="min-w-0">
             <CategoryFilter filter={filter} onChange={setFilter} />
             {filteredPlans.length === 0 ? (
               <EmptyState />
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {filteredPlans.map((plan) => (
                   <PlanCard
                     key={plan.id}
@@ -331,7 +352,7 @@ function Index() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-24 text-center">
+        <footer className="mt-16 text-center">
           <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             Hecho con mucho
             <Heart className="h-3 w-3 fill-[var(--blush)] text-[var(--blush)]" strokeWidth={1.5} />
