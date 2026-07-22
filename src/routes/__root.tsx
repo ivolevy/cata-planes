@@ -77,24 +77,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" },
-      { title: "Cata, mi gorda — Nuestros planes" },
+      { title: "los planes de ivan y la gordita" },
       {
         name: "description",
-        content:
-          "Nuestro rinconcito para guardar todos los planes que todavía nos quedan por vivir.",
+        content: "el diario de ivan y cata",
       },
       { name: "theme-color", content: "#FAF8F5" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "default" },
-      { name: "apple-mobile-web-app-title", content: "Cata Planes" },
-      { property: "og:title", content: "Cata, mi gorda" },
+      { name: "apple-mobile-web-app-title", content: "los planes de ivan y la gordita" },
+      { property: "og:title", content: "los planes de ivan y la gordita" },
       {
         property: "og:description",
-        content:
-          "Nuestro rinconcito para guardar todos los planes que todavía nos quedan por vivir.",
+        content: "el diario de ivan y cata",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "los planes de ivan y la gordita" },
+      { name: "twitter:description", content: "el diario de ivan y cata" },
+      { name: "twitter:image", content: "/og-image.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
