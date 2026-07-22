@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import {
   UtensilsCrossed,
   Coffee,
@@ -108,7 +109,8 @@ const SAMPLE: Plan[] = [
 
 
 function Index() {
-  const [plans, setPlans] = useState<Plan[]>(SAMPLE);
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState<CategoryKey>("paseo");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -116,36 +118,97 @@ function Index() {
   const [editing, setEditing] = useState<Plan | null>(null);
   const [filter, setFilter] = useState<CategoryKey | "todos">("todos");
 
+  useEffect(() => {
+    fetchPlans();
+  }, []);
+
+  async function fetchPlans() {
+    try {
+      const { data, error } = await supabase
+        .from("plans")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      if (data && data.length > 0) {
+        setPlans(data as Plan[]);
+      } else {
+        setPlans(SAMPLE);
+      }
+    } catch (err) {
+      console.error("Error fetching plans:", err);
+      setPlans(SAMPLE);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const filteredPlans = useMemo(() => {
     if (filter === "todos") return plans;
     return plans.filter((p) => p.category === filter);
   }, [plans, filter]);
 
-  function handleAdd(e: React.FormEvent) {
+  async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
-    const plan: Plan = {
-      id: crypto.randomUUID(),
+    const newPlan = {
       category,
       name: name.trim(),
       description: description.trim(),
     };
-    setPlans((p) => [plan, ...p]);
+
+    try {
+      const { data, error } = await supabase
+        .from("plans")
+        .insert([newPlan])
+        .select()
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setPlans((p) => [data as Plan, ...p]);
+      }
+    } catch (err) {
+      console.error("Error adding plan to Supabase:", err);
+      // Fallback local state if Supabase fails
+      const fallback: Plan = {
+        id: crypto.randomUUID(),
+        ...newPlan,
+      };
+      setPlans((p) => [fallback, ...p]);
+    }
 
     setName("");
     setDescription("");
     setCategory("paseo");
   }
 
-  function handleDelete(id: string) {
+  async function handleDelete(id: string) {
     setRemovingId(id);
+    try {
+      await supabase.from("plans").delete().eq("id", id);
+    } catch (err) {
+      console.error("Error deleting plan:", err);
+    }
     setTimeout(() => {
       setPlans((p) => p.filter((x) => x.id !== id));
       setRemovingId(null);
     }, 240);
   }
 
-  function handleSaveEdit(updated: Plan) {
+  async function handleSaveEdit(updated: Plan) {
+    try {
+      await supabase
+        .from("plans")
+        .update({
+          name: updated.name,
+          description: updated.description,
+          category: updated.category,
+        })
+        .eq("id", updated.id);
+    } catch (err) {
+      console.error("Error updating plan:", err);
+    }
     setPlans((p) => p.map((x) => (x.id === updated.id ? updated : x)));
     setEditing(null);
   }
