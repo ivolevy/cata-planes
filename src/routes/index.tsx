@@ -178,6 +178,11 @@ function Index() {
     }
   }
 
+  const filteredPlans = useMemo(() => {
+    if (filter === "todos") return plans;
+    return plans.filter((p) => p.category === filter);
+  }, [plans, filter]);
+
   const [page, setPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
 
